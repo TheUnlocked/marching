@@ -44,7 +44,7 @@ module.exports = `
 /*
 module.exports = `vec3 t3(sampler2D tex, vec3 p, vec3 n)
 {
-  mat3 R = mat3(vec3(cos(T),sin(T),0),vec3(-sin(T),cos(T),0),vec3(0,0,-1));
+  mat3 R = mat3(vec3(_cos(T),_sin(T),0),vec3(-sin(T),_cos(T),0),vec3(0,0,-1));
   p *= R/8.0;
   n *= R;
   #ifdef Smooth

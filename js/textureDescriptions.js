@@ -52,7 +52,7 @@ const textures = {
     vec3 rainbow( vec3 pos, float strength, vec3 uvmod, float shift, float scale ) {
       pos = (pos+uvmod) * scale;
       vec3 a = vec3(0.5,0.5,0.5), b = vec3(0.5,0.5,0.5), c = vec3(1.0,1.0,1.0),d = vec3(0.0,0.33,0.67);
-      return a + b * cos( 6.283818 * ( c * mod(length(pos) + shift, 1. ) + d ) ) * strength;
+      return a + b * _cos( 6.283818 * ( c * mod(length(pos) + shift, 1. ) + d ) ) * strength;
     }` 
   },
   checkers: {
@@ -112,7 +112,7 @@ const textures = {
     name:'truchet',
     glsl2d:`    
         float random_truchet(in vec2 _st) {
-          return fract(sin(dot(_st.xy,
+          return fract(_sin(dot(_st.xy,
                          vec2(12.9898,78.233)))*
                         43758.5453123);
         }
@@ -257,7 +257,7 @@ const textures = {
     glsl:`
     vec3 voronoi_hash(vec3 p) {
       return fract(
-          sin(vec3(dot(p, vec3(1.0, 57.0, 113.0)), dot(p, vec3(57.0, 113.0, 1.0)),
+          _sin(vec3(dot(p, vec3(1.0, 57.0, 113.0)), dot(p, vec3(57.0, 113.0, 1.0)),
                    dot(p, vec3(113.0, 1.0, 57.0)))) *
           43758.5453);
     }
@@ -305,7 +305,7 @@ const textures = {
     glsl2d:glsl`    
     vec3 voronoi_hash(vec3 p) {
       return fract(
-          sin(vec3(dot(p, vec3(1.0, 57.0, 113.0)), dot(p, vec3(57.0, 113.0, 1.0)),
+          _sin(vec3(dot(p, vec3(1.0, 57.0, 113.0)), dot(p, vec3(57.0, 113.0, 1.0)),
                    dot(p, vec3(113.0, 1.0, 57.0)))) * 43758.5453);
     }
 

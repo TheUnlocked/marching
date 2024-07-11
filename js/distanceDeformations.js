@@ -11,9 +11,9 @@ const ops = {
 
     const sdfStr = `float d1${this.id} = ${sdf.out}.x;\n`
 
-    let displaceString = `float d2${this.id} = sin( ${this.amount.emit()}.x * ${name}.x ) * `  
-    displaceString += `sin( ${this.amount.emit()}.y * ${name}.y ) * `
-    displaceString += `sin( ${this.amount.emit()}.z * ${name}.z );\n`
+    let displaceString = `float d2${this.id} = _sin( ${this.amount.emit()}.x * ${name}.x ) * `  
+    displaceString += `_sin( ${this.amount.emit()}.y * ${name}.y ) * `
+    displaceString += `_sin( ${this.amount.emit()}.z * ${name}.z );\n`
     displaceString += `${sdf.out}.x = (d1${this.id} + d2${this.id}*${this.size.emit()})*.5;\n`
 
     const output = {
@@ -46,8 +46,8 @@ const ops = {
     let name = __name === undefined ? 'p' : __name
     const sdf = this.sdf.emit( 'q'+this.id );
 
-    let preface=`        float c${this.id} = cos( ${this.amount.emit()}.x * ${name}.x );
-        float s${this.id} = sin( ${this.amount.emit()}.x * ${name}.x );
+    let preface=`        float c${this.id} = _cos( ${this.amount.emit()}.x * ${name}.x );
+        float s${this.id} = _sin( ${this.amount.emit()}.x * ${name}.x );
         mat2  m${this.id} = mat2( c${this.id},-s${this.id},s${this.id},c${this.id} );
         vec4  q${this.id} = vec4( m${this.id} * ${name}.xy, ${name}.z, 1. );\n`
 
@@ -63,8 +63,8 @@ const ops = {
 
     const sdf = this.sdf.emit( 'q'+this.id );
 
-    let preface=`        float c${this.id} = cos( ${this.amount.emit()}.x * ${name}.y );
-        float s${this.id} = sin( ${this.amount.emit()}.x * ${name}.y );
+    let preface=`        float c${this.id} = _cos( ${this.amount.emit()}.x * ${name}.y );
+        float s${this.id} = _sin( ${this.amount.emit()}.x * ${name}.y );
         mat2  m${this.id} = mat2( c${this.id},-s${this.id},s${this.id},c${this.id} );
         vec4  q${this.id} = vec4( m${this.id} * ${name}.xz, ${name}.y, 1. );\n`
 
@@ -83,14 +83,14 @@ const ops = {
     const bumpString2 = `        vec4 twist2${this.id} = (twist${this.id} * ${this.sdf.transform.emit()});\n`
     //const sdf = this.sdf.emit( 'q'+this.id );
 
-    //let preface=`        float c${this.id} = cos( ${this.amount.emit()}.x * ${name}.y );
-    //    float s${this.id} = sin( ${this.amount.emit()}.x * ${name}.y );
+    //let preface=`        float c${this.id} = _cos( ${this.amount.emit()}.x * ${name}.y );
+    //    float s${this.id} = _sin( ${this.amount.emit()}.x * ${name}.y );
     //    mat2  m${this.id} = mat2( c${this.id},-s${this.id},s${this.id},c${this.id} );
     //    vec4  q${this.id} = vec4( m${this.id} * ${name}.xz, ${name}.y, 1. );\n`
   
     name = `twist2${this.id}`
-    let preface=`        float c${this.id} = cos( ${this.amount.emit()}.x * ${name}.y );
-        float s${this.id} = sin( ${this.amount.emit()}.x * ${name}.y );
+    let preface=`        float c${this.id} = _cos( ${this.amount.emit()}.x * ${name}.y );
+        float s${this.id} = _sin( ${this.amount.emit()}.x * ${name}.y );
         mat2  m${this.id} = mat2( c${this.id},-s${this.id},s${this.id},c${this.id} );
         vec4  q${this.id} = vec4( m${this.id} * ${name}.xz, ${name}.y, 1. );\n`
 

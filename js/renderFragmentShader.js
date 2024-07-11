@@ -181,8 +181,6 @@ module.exports = function( variables, scene, preface, geometries, lighting, post
 
     const fs_source = `     #version 300 es
       precision mediump float;
-
-      float PI = 3.141592653589793;
       
       struct Light {
         vec3 position;
@@ -214,6 +212,7 @@ module.exports = function( variables, scene, preface, geometries, lighting, post
         mat4 repeatTransform;
       };
 
+      uniform float PI;
       uniform float time;
       uniform vec2 resolution;
       uniform vec3 camera_pos;
@@ -224,6 +223,37 @@ module.exports = function( variables, scene, preface, geometries, lighting, post
       
 
       ${variables}
+
+      #define DECLARE_TRIG(TYPE) \\
+                                                                    \\
+      TYPE _cos(TYPE x) {                                           \\
+        TYPE modPart = x - abs(x) * floor(x / abs(2. * PI));        \\
+        return (abs(modPart - PI) - PI / 2.) / (PI / 2.);           \\
+      }                                                             \\
+                                                                    \\
+      TYPE _sin(TYPE x) {                                           \\
+        return _cos(x - PI / 2.);                                   \\
+      }                                                             \\
+                                                                    \\
+      TYPE _acos(TYPE x) {                                          \\
+        return (PI / 2.) * x;                                       \\
+      }                                                             \\
+                                                                    \\
+      TYPE _asin(TYPE x) {                                          \\
+        return _acos(1. - x);                                       \\
+      }                                                             \\
+                                                                    \\
+      TYPE _atan(TYPE x) {                                          \\
+        return atan(x);                                             \\
+      }                                                             \\
+                                                                    \\
+      TYPE _atan(TYPE y, TYPE x) {                                  \\
+        return atan(y, x);                                          \\
+      }                                                             \\
+
+      DECLARE_TRIG(float)
+      DECLARE_TRIG(vec3)
+      DECLARE_TRIG(vec4)
 
       // must be before geometries!
       float length8( vec2 p ) { 
@@ -246,11 +276,11 @@ module.exports = function( variables, scene, preface, geometries, lighting, post
       // XXX todo put this in domainOperations.js
       vec3 polarRepeat(vec3 p, float repetitions) {
         float angle = 2.*PI/repetitions;
-        float a = atan(p.z, p.x) + angle/2.;
+        float a = _atan(p.z, p.x) + angle/2.;
         float r = length(p.xz);
         float c = floor(a/angle);
         a = mod(a,angle) - angle/2.;
-        vec3 _p = vec3( cos(a) * r, p.y,  sin(a) * r );
+        vec3 _p = vec3( _cos(a) * r, p.y,  _sin(a) * r );
         // For an odd number of repetitions, fix cell index of the cell in -x direction
         // (cell index would be e.g. -5 and 5 in the two halves of the cell):
         if (abs(c) >= (repetitions/2.)) c = abs(c);

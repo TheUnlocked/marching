@@ -1,3 +1,23 @@
+const originalMath = Math;
+
+function mod(a, b) {
+  return ((a % b) + b) % b;
+}
+
+window.Math = new Proxy({
+  // Change this at runtime for some fun
+  PI: originalMath.PI,
+  // A function which follows _cos(x) but with only linear ascent/descent, like: /\/\/\/\/\/\
+  // In theory you can also change these at runtime if you want.
+  cos: x => (Math.abs(mod(x, 2 * Math.PI) - Math.PI) - (Math.PI / 2)) / (Math.PI / 2),
+  sin: x => Math.cos(x - (Math.PI / 2)),
+  tan: x => Math.sin(x) / Math.cos(x),
+}, {
+  get(target, key, reciever) {
+    return Reflect.get(target, key, reciever) || Reflect.get(originalMath, key, originalMath);
+  }
+});
+
 const SDF = {
   camera:           require( './camera.js' ),
   __primitives:     require( './primitives.js' ),
@@ -297,7 +317,9 @@ const SDF = {
     const uTime= this.gl.getUniformLocation( this.program, "time" )
     const uResolution = this.gl.getUniformLocation( this.program, "resolution" )
 
-    return { aPos, uTime, uResolution } 
+    const uPI= this.gl.getUniformLocation( this.program, "PI" )
+
+    return { aPos, uTime, uResolution, uPI } 
   },
 
   initTextures( gl, width, height ) {
@@ -365,7 +387,7 @@ const SDF = {
     const gl                                = this.gl,
           programs                          = this.initShaderProgram( vs, fs, gl ),
           { colorTexture, depthTexture }    = this.initTextures( gl, width, height ),
-          { aPos, uTime, uResolution }      = this.initUniforms( gl, programs[0] ),
+          { aPos, uTime, uResolution, uPI } = this.initUniforms( gl, programs[0] ),
           { vbo, vertices, framebuffer }    = this.initBuffers( width, height, colorTexture, depthTexture )
  
     let total_time = 0.0,
@@ -415,6 +437,7 @@ const SDF = {
 
         total_time = timestamp / 1000.0
         gl.uniform1f( uTime, total_time )
+        gl.uniform1f( uPI, Math.PI )
 
         this.callbacks.forEach( cb => cb( total_time, this.currentTime ) )
 

@@ -85,7 +85,7 @@ module.exports = {
   }
 
   float julia( in vec3 p, float atime ){
-    vec4 c = 0.45*cos( vec4(0.5,3.9,1.4,1.1) + atime * vec4(1.2,1.7,1.3,2.5) ) - vec4(0.3,0.0,0.0,0.0);
+    vec4 c = 0.45*_cos( vec4(0.5,3.9,1.4,1.1) + atime * vec4(1.2,1.7,1.3,2.5) ) - vec4(0.3,0.0,0.0,0.0);
     vec4 z = vec4(p,0.);
     float md2 = 1.0;
     float mz2 = dot(z,z);
@@ -122,7 +122,7 @@ module.exports = {
              length(max(d,0.0));
     }
     vec2 fold(vec2 p, float ang){    
-        vec2 n=vec2(cos(-ang),sin(-ang));
+        vec2 n=vec2(_cos(-ang),_sin(-ang));
         p-=2.*min(0.,dot(p,n))*n;
         return p;
     }
@@ -254,9 +254,9 @@ module.exports = {
           dz = aa*pow(sqrt(m),aa - 1.)*dz + 1.0;
 
           float r = length(w);
-          float b = aa*acos( w.y /r);
-          float a = aa*atan( w.x, w.z );
-          w = p + pow(r,aa) * vec3( sin(b)*sin(a), cos(b), sin(b)*cos(a) );
+          float b = aa*_acos( w.y /r);
+          float a = aa*_atan( w.x, w.z );
+          w = p + pow(r,aa) * vec3( _sin(b)*_sin(a), _cos(b), _sin(b)*_cos(a) );
 
           trap = min( trap, vec4(abs(w),m) );
 
@@ -384,11 +384,11 @@ module.exports = {
     glslify:glsl`    #pragma glslify: SuperFormula	= require( 'glsl-superformula' )
  float superformula( vec3 p, float m_1, float n1_1, float n2_1, float n3_1, float a_1, float b_1, float m_2, float n1_2, float n2_2, float n3_2, float a_2, float b_2 ) {
     float d = length( p );
-    float theta = atan(p.y, p.x);
-    float phi = d == 0. ? 0. : asin(p.z / d);
+    float theta = _atan(p.y, p.x);
+    float phi = d == 0. ? 0. : _asin(p.z / d);
     float r1 = SuperFormula( theta, m_1, n1_1, n2_1, n3_1, a_1, b_1 );
     float r2 = SuperFormula( phi, m_2, n1_2, n2_2, n3_2, a_2, b_2 );
-    vec3 q = r2 * vec3(r1 * cos(theta) * cos(phi), r1 * sin(theta) * cos(phi), sin(phi));
+    vec3 q = r2 * vec3(r1 * _cos(theta) * _cos(phi), r1 * _sin(theta) * _cos(phi), _sin(phi));
     d = d - length(q);
 
     return d;

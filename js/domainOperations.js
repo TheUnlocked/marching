@@ -242,12 +242,12 @@ const descriptions = {
 
 //    vec2 smoothrepeat_asin_sin(vec2 p,float smooth_size,float size){
 //    p/=size;
-//    p=asin(sin(p)*(1.0-smooth_size));
+//    p=_asin(_sin(p)*(1.0-smooth_size));
 //    return p*size;
 
       let preface =`
         vec3 ${pName}Mod = ${pointString}/${this.__target.distance.emit()};
-        ${pName}Mod = asin( sin( ${pName}Mod ) * (1.0 - ${this.__target.smoothness.emit()} ) );
+        ${pName}Mod = _asin( _sin( ${pName}Mod ) * (1.0 - ${this.__target.smoothness.emit()} ) );
         vec4 ${pName} = vec4( ${pName}Mod * ${this.__target.distance.emit()} * ${this.transform.emit_scale()}, 1. );\n`
 
       const sdf = this.sdf.emit( pName )//, this.transform )//, 1, this.__target.distance )
@@ -280,7 +280,7 @@ const descriptions = {
 /*vec2 smoothRot(vec2 p,float s,float m,float c,float d){
   s*=0.5;
   float k=length(p);
-  float x=asin(sin(atan(p.x,p.y)*s)*(1.0-m))*k;
+  float x=_asin(_sin(_atan(p.x,p.y)*s)*(1.0-m))*k;
   float ds=k*s;
   float y=mix(ds,2.0*ds-sqrt(x*x+ds*ds),c);
   return vec2(x/s,y/s-d);
