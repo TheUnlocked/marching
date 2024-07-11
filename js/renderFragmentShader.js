@@ -227,8 +227,7 @@ module.exports = function( variables, scene, preface, geometries, lighting, post
       #define DECLARE_TRIG(TYPE) \\
                                                                     \\
       TYPE _cos(TYPE x) {                                           \\
-        TYPE modPart = x - abs(x) * floor(x / abs(2. * PI));        \\
-        return (abs(modPart - PI) - PI / 2.) / (PI / 2.);           \\
+        return (abs(mod(x, 2. * PI) - PI) - PI / 2.) / (PI / 2.);   \\
       }                                                             \\
                                                                     \\
       TYPE _sin(TYPE x) {                                           \\
